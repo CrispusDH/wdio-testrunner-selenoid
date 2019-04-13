@@ -1,0 +1,44 @@
+{
+  "name": "wdio-testrunner-selenoid",
+  "version": "0.0.1",
+  "description": "Boilerplate project with selenoid and wdio test runner",
+  "author": "Oleksii Ihnatiuk",
+  "devDependencies": {
+    "typescript": "3.4.2",
+    "tslint-eslint-rules": "5.4.0",
+    "tslint": "5.15.0",
+    "webdriverio": "5.7.9",
+    "@types/node": "11.13.2",
+    "p-filter": "2.0.0",
+    "@wdio/mocha-framework": "5.7.8",
+    "@wdio/local-runner": "5.7.9",
+    "@wdio/cli": "5.7.10",
+    "@wdio/selenium-standalone-service": "5.7.8",
+    "@wdio/spec-reporter": "5.7.9",
+    "@types/mocha": "5.2.6",
+    "oi-verify": "1.5.0"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "lint": "tslint 'src/**/*.ts' 'test/**/*.ts'",
+    "tsc": "tsc",
+    "test": "./node_modules/.bin/wdio wdio.conf.selenoid.js",
+    "pretest": "npm run clean && npm run lint && npm run tsc",
+    "aftertest": "npm run selenoid:cleanup && npm run selenoid:stop && npm run selenoid:rm && npm run clean",
+    "cm:install": "curl -s https://aerokube.com/cm/bash | bash",
+    "selenoid:download": "./cm selenoid download",
+    "selenoid:configure": "./cm selenoid configure --browsers chrome --last-versions 1 --vnc",
+    "selenoid:start": "./cm selenoid start --vnc --args \"--limit 1\"",
+    "selenoid:stop": "./cm selenoid stop",
+    "selenoid:cleanup": "./cm selenoid cleanup",
+    "selenoid:rm": "docker rm -f $(docker ps -aq) || true",
+    "selenoidui": "docker run -d --name selenoid-ui --link selenoid -p 8080:8080 aerokube/selenoid-ui --selenoid-uri=http://selenoid:4444"
+  },
+  "ava": {
+    "files": [
+      "dist/test/**/*.js"
+    ],
+    "failWithoutAssertions": false,
+    "verbose": true
+  }
+}
